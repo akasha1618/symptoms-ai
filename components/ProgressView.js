@@ -36,6 +36,7 @@ export default function ProgressView({ user }) {
   const [symptoms, setSymptoms] = useState([]);
   const [period, setPeriod] = useState(7);
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     if (!user) return;
@@ -367,6 +368,148 @@ export default function ProgressView({ user }) {
                 <span className="text-gray-600 font-semibold">{count} times</span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Symptom History Table */}
+      {filteredSymptoms.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg p-6 mt-6 border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <svg className="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Symptom History
+          </h3>
+          
+          {/* Category Filter */}
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  selectedCategory === 'all'
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All Categories
+              </button>
+              {Array.from(new Set(filteredSymptoms.map(s => s.category).filter(Boolean))).map(category => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === category
+                      ? 'bg-indigo-500 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* History Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Symptom</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Severity</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Trigger</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSymptoms
+                  .filter(s => selectedCategory === 'all' || s.category === selectedCategory)
+                  .map((symptom, index) => (
+                    <tr key={symptom.id} className={`border-b border-gray-100 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                      <td className="py-3 px-4 text-gray-600">
+                        {new Date(symptom.date).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 px-4 font-medium text-gray-800">
+                        {symptom.name}
+                      </td>
+                      <td className="py-3 px-4">
+                        {symptom.category ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {symptom.category}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            symptom.severity <= 2 ? 'bg-green-100 text-green-800' :
+                            symptom.severity <= 4 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {symptom.severity}/5
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {symptom.severity <= 2 ? 'Mild' :
+                             symptom.severity <= 4 ? 'Moderate' : 'Severe'}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-gray-600 max-w-xs truncate">
+                        {symptom.foodAction || '-'}
+                      </td>
+                      <td className="py-3 px-4 text-gray-600 max-w-xs truncate">
+                        {symptom.notes || '-'}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Summary Stats */}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-indigo-600">
+                  {filteredSymptoms.filter(s => selectedCategory === 'all' || s.category === selectedCategory).length}
+                </div>
+                <div className="text-xs text-gray-500">Total Entries</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-600">
+                  {selectedCategory === 'all' ? 
+                    Array.from(new Set(filteredSymptoms.map(s => s.category).filter(Boolean))).length :
+                    1
+                  }
+                </div>
+                <div className="text-xs text-gray-500">Categories</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {(filteredSymptoms
+                    .filter(s => selectedCategory === 'all' || s.category === selectedCategory)
+                    .reduce((sum, s) => sum + s.severity, 0) / 
+                    filteredSymptoms.filter(s => selectedCategory === 'all' || s.category === selectedCategory).length
+                  ).toFixed(1)}
+                </div>
+                <div className="text-xs text-gray-500">Avg Severity</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {Array.from(new Set(
+                    filteredSymptoms
+                      .filter(s => selectedCategory === 'all' || s.category === selectedCategory)
+                      .map(s => s.name)
+                  )).length}
+                </div>
+                <div className="text-xs text-gray-500">Unique Symptoms</div>
+              </div>
+            </div>
           </div>
         </div>
       )}

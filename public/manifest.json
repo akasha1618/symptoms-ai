@@ -1,6 +1,6 @@
 {
-  "name": "Symptomps AI",
-  "short_name": "SymptompsAI",
+  "name": "Symptoms AI",
+  "short_name": "SymptomsAI",
   "description": "Track your symptoms and get AI-powered recommendations.",
   "start_url": "/",
   "display": "standalone",

@@ -54,7 +54,7 @@ export default function Navigation({ activeTab, onTabChange, user }) {
                 <span className="text-white text-sm font-bold">S</span>
               </div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Symptomps AI
+                Symptoms AI
               </h1>
             </div>
             {user && (
