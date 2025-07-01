@@ -23,6 +23,7 @@ export default function SymptomTracker({ user }) {
   const [showAddField, setShowAddField] = useState(false);
   const [newField, setNewField] = useState({ name: '', type: 'text', display_name: '' });
   const [loading, setLoading] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   // Fetch symptoms and custom fields for the logged-in user
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function SymptomTracker({ user }) {
         date: new Date().toISOString().split('T')[0],
         custom_fields: {}
       });
+      setShowAddForm(false);
     }
   };
 
@@ -150,6 +152,12 @@ export default function SymptomTracker({ user }) {
     return 'bg-red-100 text-red-800';
   };
 
+  const getSeverityEmoji = (severity) => {
+    if (severity <= 2) return '😊';
+    if (severity <= 4) return '😐';
+    return '😰';
+  };
+
   const renderCustomFieldInput = (field, value, onChange) => {
     switch (field.type) {
       case 'select':
@@ -157,7 +165,7 @@ export default function SymptomTracker({ user }) {
           <select
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
           >
             <option value="">Select...</option>
             <option value="Yes">Yes</option>
@@ -171,7 +179,7 @@ export default function SymptomTracker({ user }) {
             type="number"
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
           />
         );
       default:
@@ -180,67 +188,202 @@ export default function SymptomTracker({ user }) {
             type="text"
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
           />
         );
     }
   };
 
   if (loading) {
-    return <div className="text-center py-10 text-gray-500">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <span className="ml-3 text-gray-600">Loading symptoms...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Symptom Tracker</h2>
-      <div className="mb-2 text-sm text-gray-600">
-        <strong>Custom Fields:</strong> Add your own input fields to track extra information (e.g., Medication, Weather, Triggers). These fields will appear as columns in your symptom tracker table and can be filled in for each symptom entry.
+    <div className="container mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Symptom Tracker</h2>
+        <p className="text-gray-600 text-sm">
+          Track your symptoms and discover patterns with AI insights
+        </p>
       </div>
+
+      {/* Quick Add Button */}
+      <div className="mb-6">
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-4 px-6 rounded-2xl font-semibold shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 flex items-center justify-center space-x-2"
+        >
+          <span className="text-xl">➕</span>
+          <span>Add New Symptom</span>
+        </button>
+      </div>
+
+      {/* Add Symptom Form */}
+      {showAddForm && (
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">Add New Symptom</h3>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                placeholder="Symptom name"
+                value={newSymptom.name}
+                onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              />
+              <select
+                value={newSymptom.category}
+                onChange={(e) => setNewSymptom({ ...newSymptom, category: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                placeholder="Add new category"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                onBlur={() => {
+                  if (newCategory && !categories.includes(newCategory)) {
+                    setCategories([...categories, newCategory]);
+                    setNewCategory('');
+                  }
+                }}
+              />
+              <select
+                value={newSymptom.severity}
+                onChange={(e) => setNewSymptom({ ...newSymptom, severity: parseInt(e.target.value) })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              >
+                <option value={1}>😊 Mild (1)</option>
+                <option value={2}>😐 Moderate (2)</option>
+                <option value={3}>😐 Moderate (3)</option>
+                <option value={4}>😰 Severe (4)</option>
+                <option value={5}>😰 Very Severe (5)</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <textarea
+                placeholder="Additional notes (optional)"
+                value={newSymptom.notes}
+                onChange={(e) => setNewSymptom({ ...newSymptom, notes: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 resize-none"
+                rows="3"
+              />
+              <input
+                type="text"
+                placeholder="Food/Action trigger (optional)"
+                value={newSymptom.foodAction}
+                onChange={(e) => setNewSymptom({ ...newSymptom, foodAction: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              />
+            </div>
+
+            {/* Custom Fields Inputs */}
+            {customFields.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-gray-700">Custom Fields:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {customFields.map((field) => (
+                    <div key={field.id}>
+                      <label className="block text-xs font-medium text-gray-600 mb-2">
+                        {field.display_name}
+                      </label>
+                      {renderCustomFieldInput(
+                        field,
+                        newSymptom[field.name],
+                        (value) => setNewSymptom({ ...newSymptom, [field.name]: value })
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex space-x-3 pt-4">
+              <button
+                onClick={addSymptom}
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md"
+              >
+                Add Symptom
+              </button>
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Custom Fields Management */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Custom Fields</h3>
+          <h3 className="text-lg font-semibold text-gray-800">Custom Fields</h3>
           <button
             onClick={() => setShowAddField(!showAddField)}
-            className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-md"
           >
-            {showAddField ? 'Cancel' : 'Add Custom Field'}
+            {showAddField ? 'Cancel' : 'Add Field'}
           </button>
         </div>
+        
         {showAddField && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
-            <input
-              type="text"
-              placeholder="Field name (e.g., Medication, Weather)"
-              value={newField.name}
-              onChange={(e) => setNewField({ ...newField, name: e.target.value, display_name: e.target.value })}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <select
-              value={newField.type}
-              onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="text">Text</option>
-              <option value="number">Number</option>
-              <option value="select">Yes/No/Maybe</option>
-            </select>
-            <button
-              onClick={addCustomField}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Add Field
-            </button>
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <input
+                type="text"
+                placeholder="Field name (e.g., Medication)"
+                value={newField.name}
+                onChange={(e) => setNewField({ ...newField, name: e.target.value, display_name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+              />
+              <select
+                value={newField.type}
+                onChange={(e) => setNewField({ ...newField, type: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+              >
+                <option value="text">Text</option>
+                <option value="number">Number</option>
+                <option value="select">Yes/No/Maybe</option>
+              </select>
+              <button
+                onClick={addCustomField}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 font-medium shadow-md"
+              >
+                Add Field
+              </button>
+            </div>
           </div>
         )}
+        
         {customFields.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {customFields.map((field) => (
-              <div key={field.id} className="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+              <div key={field.id} className="flex items-center bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
                 <span>{field.display_name}</span>
                 <button
                   onClick={() => removeCustomField(field.name)}
-                  className="ml-2 text-blue-600 hover:text-blue-800"
+                  className="ml-2 text-blue-600 hover:text-blue-800 font-bold"
                 >
                   ×
                 </button>
@@ -249,258 +392,89 @@ export default function SymptomTracker({ user }) {
           </div>
         )}
       </div>
-      {/* Add New Symptom Form */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 className="text-lg font-semibold mb-4">Add New Symptom</h3>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <input
-            type="text"
-            placeholder="Symptom name"
-            value={newSymptom.name}
-            onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <select
-            value={newSymptom.category}
-            onChange={(e) => setNewSymptom({ ...newSymptom, category: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Add new category"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onBlur={() => {
-              if (newCategory && !categories.includes(newCategory)) {
-                setCategories([...categories, newCategory]);
-                setNewCategory('');
-              }
-            }}
-          />
-          <select
-            value={newSymptom.severity}
-            onChange={(e) => setNewSymptom({ ...newSymptom, severity: parseInt(e.target.value) })}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value={1}>Severity 1 (Mild)</option>
-            <option value={2}>Severity 2</option>
-            <option value={3}>Severity 3</option>
-            <option value={4}>Severity 4</option>
-            <option value={5}>Severity 5 (Severe)</option>
-          </select>
-          <button
-            onClick={addSymptom}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Add Symptom
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <textarea
-            placeholder="Additional notes (optional)"
-            value={newSymptom.notes}
-            onChange={(e) => setNewSymptom({ ...newSymptom, notes: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows="2"
-          />
-          <input
-            type="text"
-            placeholder="Food/Action that might have triggered this (optional)"
-            value={newSymptom.foodAction}
-            onChange={(e) => setNewSymptom({ ...newSymptom, foodAction: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        {/* Custom Fields Inputs */}
-        {customFields.length > 0 && (
-          <div className="mt-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Custom Fields:</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {customFields.map((field) => (
-                <div key={field.id}>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {field.display_name}
-                  </label>
-                  {renderCustomFieldInput(
-                    field,
-                    newSymptom[field.name],
-                    (value) => setNewSymptom({ ...newSymptom, [field.name]: value })
+
+      {/* Symptoms List */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Symptoms</h3>
+        {symptoms.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
+            <div className="text-6xl mb-4">📊</div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">No symptoms tracked yet</h3>
+            <p className="text-gray-600 mb-4">Start tracking your symptoms to see patterns and get AI insights</p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md"
+            >
+              Add Your First Symptom
+            </button>
+          </div>
+        ) : (
+          symptoms.map((symptom) => (
+            <div key={symptom.id} className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h4 className="text-lg font-semibold text-gray-800">{symptom.name}</h4>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSeverityColor(symptom.severity)}`}>
+                      {getSeverityEmoji(symptom.severity)} Level {symptom.severity}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span>📅 {new Date(symptom.date).toLocaleDateString()}</span>
+                    {symptom.category && <span>🏷️ {symptom.category}</span>}
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setEditingId(editingId === symptom.id ? null : symptom.id)}
+                    className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => deleteSymptom(symptom.id)}
+                    className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+              
+              {(symptom.notes || symptom.foodAction) && (
+                <div className="space-y-2 mb-4">
+                  {symptom.notes && (
+                    <p className="text-gray-700 text-sm">
+                      <span className="font-medium">Notes:</span> {symptom.notes}
+                    </p>
+                  )}
+                  {symptom.foodAction && (
+                    <p className="text-gray-700 text-sm">
+                      <span className="font-medium">Trigger:</span> {symptom.foodAction}
+                    </p>
                   )}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-      {/* Symptoms Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symptom</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Food/Action</th>
-                {customFields.map((field) => (
-                  <th key={field.id} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {field.display_name}
-                  </th>
-                ))}
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {symptoms.length === 0 ? (
-                <tr>
-                  <td colSpan={7 + customFields.length} className="px-6 py-4 text-center text-gray-500">
-                    No symptoms tracked yet. Add your first symptom above!
-                  </td>
-                </tr>
-              ) : (
-                symptoms.map((symptom) => (
-                  <tr key={symptom.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === symptom.id ? (
-                        <input
-                          type="text"
-                          defaultValue={symptom.name}
-                          onBlur={(e) => updateSymptom(symptom.id, { name: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-full"
-                        />
-                      ) : (
-                        <div className="text-sm font-medium text-gray-900">{symptom.name}</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === symptom.id ? (
-                        <select
-                          defaultValue={symptom.category}
-                          onBlur={(e) => updateSymptom(symptom.id, { category: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-full"
-                        >
-                          <option value="">Select Category</option>
-                          {categories.map((cat) => (
-                            <option key={cat} value={cat}>{cat}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <div className="text-sm text-gray-900">{symptom.category || '-'}</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === symptom.id ? (
-                        <select
-                          defaultValue={symptom.severity}
-                          onBlur={(e) => updateSymptom(symptom.id, { severity: parseInt(e.target.value) })}
-                          className="border border-gray-300 rounded px-2 py-1"
-                        >
-                          <option value={1}>1 (Mild)</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5 (Severe)</option>
-                        </select>
-                      ) : (
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSeverityColor(symptom.severity)}`}>
-                          {symptom.severity}/5
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editingId === symptom.id ? (
-                        <input
-                          type="date"
-                          defaultValue={symptom.date}
-                          onBlur={(e) => updateSymptom(symptom.id, { date: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1"
-                        />
-                      ) : (
-                        new Date(symptom.date).toLocaleDateString()
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === symptom.id ? (
-                        <input
-                          type="text"
-                          defaultValue={symptom.foodAction || ''}
-                          onBlur={(e) => updateSymptom(symptom.id, { foodAction: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-full"
-                        />
-                      ) : (
-                        <div className="text-sm text-gray-900 max-w-xs truncate">
-                          {symptom.foodAction || '-'}
-                        </div>
-                      )}
-                    </td>
-                    {customFields.map((field) => (
-                      <td key={field.id} className="px-6 py-4 whitespace-nowrap">
-                        {editingId === symptom.id ? (
-                          renderCustomFieldInput(
-                            field,
-                            symptom.custom_fields ? symptom.custom_fields[field.name] : '',
-                            (value) => updateSymptom(symptom.id, { custom_fields: { ...symptom.custom_fields, [field.name]: value } })
-                          )
-                        ) : (
-                          <div className="text-sm text-gray-900 max-w-xs truncate">
-                            {symptom.custom_fields ? symptom.custom_fields[field.name] : '-'}
-                          </div>
-                        )}
-                      </td>
-                    ))}
-                    <td className="px-6 py-4">
-                      {editingId === symptom.id ? (
-                        <textarea
-                          defaultValue={symptom.notes}
-                          onBlur={(e) => updateSymptom(symptom.id, { notes: e.target.value })}
-                          className="border border-gray-300 rounded px-2 py-1 w-full"
-                          rows="2"
-                        />
-                      ) : (
-                        <div className="text-sm text-gray-900 max-w-xs truncate">
-                          {symptom.notes || '-'}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        {editingId === symptom.id ? (
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            Save
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setEditingId(symptom.id)}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            Edit
-                          </button>
-                        )}
-                        <button
-                          onClick={() => deleteSymptom(symptom.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
               )}
-            </tbody>
-          </table>
-        </div>
+
+              {/* Custom Fields Display */}
+              {symptom.custom_fields && Object.keys(symptom.custom_fields).length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-sm font-medium text-gray-700">Custom Fields:</h5>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(symptom.custom_fields).map(([key, value]) => {
+                      const field = customFields.find(f => f.name === key);
+                      if (!field || !value) return null;
+                      return (
+                        <div key={key} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm">
+                          <span className="font-medium">{field.display_name}:</span> {value}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

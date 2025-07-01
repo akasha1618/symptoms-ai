@@ -25,7 +25,13 @@ export default function Home() {
   }, []);
 
   if (!session) {
-    return <AuthComponent />;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container mx-auto px-4 py-8">
+          <AuthComponent />
+        </div>
+      </div>
+    );
   }
 
   const renderContent = () => {
@@ -38,44 +44,44 @@ export default function Home() {
         return <AIInsights user={session.user} />;
       case 'settings':
         return (
-          <div className="max-w-4xl mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Settings</h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">App Settings</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Export Data
-                  </label>
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-                    Download Symptom Data
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Clear All Data
-                  </label>
-                  <button 
-                    onClick={() => {
-                      if (confirm('Are you sure you want to clear all symptom data? This cannot be undone.')) {
-                        // Clear data from Supabase (to be implemented)
-                        window.location.reload();
-                      }
-                    }}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
-                  >
-                    Clear All Data
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={async () => {
-                      await supabase.auth.signOut();
-                    }}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-                  >
-                    Log Out
-                  </button>
+          <div className="container mx-auto px-4 py-6">
+            <div className="max-w-md mx-auto">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Settings</h2>
+              <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                    <h3 className="text-lg font-semibold mb-3 text-gray-800">Data Management</h3>
+                    <button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 font-medium shadow-md">
+                      📥 Download Symptom Data
+                    </button>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-xl p-4">
+                    <h3 className="text-lg font-semibold mb-3 text-gray-800">Danger Zone</h3>
+                    <button 
+                      onClick={() => {
+                        if (confirm('Are you sure you want to clear all symptom data? This cannot be undone.')) {
+                          // Clear data from Supabase (to be implemented)
+                          window.location.reload();
+                        }
+                      }}
+                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-md"
+                    >
+                      🗑️ Clear All Data
+                    </button>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-4">
+                    <h3 className="text-lg font-semibold mb-3 text-gray-800">Account</h3>
+                    <button
+                      onClick={async () => {
+                        await supabase.auth.signOut();
+                      }}
+                      className="w-full bg-gradient-to-r from-gray-500 to-slate-500 text-white px-4 py-3 rounded-xl hover:from-gray-600 hover:to-slate-600 transition-all duration-200 font-medium shadow-md"
+                    >
+                      🚪 Log Out
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,9 +93,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} user={session.user} />
-      <main className="py-6">
+      <main className="pb-20">
         {renderContent()}
       </main>
     </div>
