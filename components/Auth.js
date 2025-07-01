@@ -12,7 +12,7 @@ export default function AuthComponent() {
             <span className="text-white text-2xl font-bold">S</span>
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Symptomps AI
+           Symptoms AI
           </h1>
           <p className="text-gray-600 text-sm">
             Track your symptoms with AI-powered insights

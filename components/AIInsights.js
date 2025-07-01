@@ -70,31 +70,31 @@ export default function AIInsights({ user }) {
     
     // Severity analysis
     if (avgSeverity <= 2) {
-      insights += "✅ Overall Health Status: Good\n";
+      insights += "Overall Health Status: Good\n";
       insights += "Your symptoms are generally mild, which is a positive sign!\n\n";
     } else if (avgSeverity <= 3.5) {
-      insights += "⚠️ Overall Health Status: Moderate\n";
+      insights += "Overall Health Status: Moderate\n";
       insights += "Your symptoms are moderate. Consider tracking more frequently.\n\n";
     } else {
-      insights += "🚨 Overall Health Status: Concerning\n";
+      insights += "Overall Health Status: Concerning\n";
       insights += "Your symptoms are severe. Please consult with a healthcare provider.\n\n";
     }
 
     // Recent activity
     if (recentSymptoms.length > 0) {
-      insights += `📈 Recent Activity: You've tracked ${recentSymptoms.length} symptoms in the last 7 days.\n\n`;
+      insights += `Recent Activity: You've tracked ${recentSymptoms.length} symptoms in the last 7 days.\n\n`;
     }
 
     // Pattern analysis
     if (mostCommonCategory) {
-      insights += `🏷️ Most Common Category: ${mostCommonCategory} (${categories[mostCommonCategory]} occurrences)\n\n`;
+      insights += `Most Common Category: ${mostCommonCategory} (${categories[mostCommonCategory]} occurrences)\n\n`;
     }
 
     if (mostCommonTrigger) {
-      insights += `🔍 Potential Trigger: ${mostCommonTrigger} (${triggers[mostCommonTrigger]} occurrences)\n\n`;
+      insights += `Potential Trigger: ${mostCommonTrigger} (${triggers[mostCommonTrigger]} occurrences)\n\n`;
     }
 
-    insights += "💡 Recommendations:\n";
+    insights += "Recommendations:\n";
     insights += "• Continue tracking your symptoms regularly\n";
     insights += "• Note any patterns or triggers\n";
     insights += "• Consider lifestyle factors that might affect your symptoms\n";
@@ -181,7 +181,9 @@ export default function AIInsights({ user }) {
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-3">
-              <span className="text-white text-lg font-bold">📊</span>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
             </div>
             <h3 className="text-lg font-semibold text-gray-800">Your AI Insights</h3>
           </div>
@@ -199,13 +201,17 @@ export default function AIInsights({ user }) {
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <div className="flex items-center mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
-            <span className="text-white text-lg font-bold">🚀</span>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
           </div>
           <h3 className="text-lg font-semibold text-gray-800">Coming Soon</h3>
         </div>
         <div className="space-y-4">
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
-            <span className="text-purple-600 text-lg font-bold">🔮</span>
+            <svg className="w-5 h-5 text-purple-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
             <div>
               <h4 className="font-medium text-gray-800">Predictive Analysis</h4>
               <p className="text-gray-600 text-sm">AI will predict potential symptom flare-ups based on patterns</p>
@@ -213,7 +219,9 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
-            <span className="text-blue-600 text-lg font-bold">💊</span>
+            <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
             <div>
               <h4 className="font-medium text-gray-800">Medication Insights</h4>
               <p className="text-gray-600 text-sm">Track medication effectiveness and potential interactions</p>
@@ -221,7 +229,9 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
-            <span className="text-green-600 text-lg font-bold">🏥</span>
+            <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
             <div>
               <h4 className="font-medium text-gray-800">Healthcare Integration</h4>
               <p className="text-gray-600 text-sm">Share insights directly with your healthcare providers</p>
@@ -229,7 +239,9 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl">
-            <span className="text-orange-600 text-lg font-bold">📱</span>
+            <svg className="w-5 h-5 text-orange-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4.19A4 4 0 004 6v12a4 4 0 004 4h12a4 4 0 004-4V6a4 4 0 00-4-4H8a4 4 0 00-2.81 1.19zM12 8v4m0 4h.01" />
+            </svg>
             <div>
               <h4 className="font-medium text-gray-800">Smart Notifications</h4>
               <p className="text-gray-600 text-sm">Intelligent reminders and health alerts</p>
@@ -241,7 +253,11 @@ export default function AIInsights({ user }) {
       {/* Empty State */}
       {symptoms.length === 0 && !insights && (
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
-          <div className="text-6xl mb-4 text-gray-400">🤖</div>
+          <div className="flex justify-center mb-4">
+            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">No data to analyze yet</h3>
           <p className="text-gray-600 mb-4">Start tracking your symptoms to unlock AI-powered insights and recommendations</p>
         </div>

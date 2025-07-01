@@ -195,7 +195,11 @@ export default function ProgressView({ user }) {
               <p className="text-blue-100 text-sm font-medium">Total Symptoms</p>
               <p className="text-2xl font-bold">{filteredSymptoms.length}</p>
             </div>
-            <div className="text-3xl text-blue-200">📊</div>
+            <div className="text-blue-200">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
           </div>
         </div>
         
@@ -205,7 +209,11 @@ export default function ProgressView({ user }) {
               <p className="text-green-100 text-sm font-medium">Avg Severity</p>
               <p className="text-2xl font-bold">{getAverageSeverity()}</p>
             </div>
-            <div className="text-3xl text-green-200">📈</div>
+            <div className="text-green-200">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
           </div>
         </div>
         
@@ -215,7 +223,11 @@ export default function ProgressView({ user }) {
               <p className="text-purple-100 text-sm font-medium">This Week</p>
               <p className="text-2xl font-bold">{getRecentSymptoms().length}</p>
             </div>
-            <div className="text-3xl text-purple-200">📅</div>
+            <div className="text-purple-200">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -225,7 +237,9 @@ export default function ProgressView({ user }) {
         {/* Severity Trend Chart */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2 text-blue-500">📈</span>
+            <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
             Severity Trend
           </h3>
           {lineChartData && lineChartData.labels.length > 0 ? (
@@ -265,7 +279,11 @@ export default function ProgressView({ user }) {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-4xl mb-4 text-gray-400">📊</div>
+              <div className="flex justify-center mb-4">
+                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
               <p className="text-gray-500">No data for selected period</p>
             </div>
           )}
@@ -274,7 +292,10 @@ export default function ProgressView({ user }) {
         {/* Category Distribution Chart */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2 text-purple-500">🥧</span>
+            <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+            </svg>
             Symptoms by Category
           </h3>
           {pieChartData && pieChartData.labels.length > 0 ? (
@@ -309,7 +330,12 @@ export default function ProgressView({ user }) {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-4xl mb-4 text-gray-400">🥧</div>
+              <div className="flex justify-center mb-4">
+                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                </svg>
+              </div>
               <p className="text-gray-500">No data for selected period</p>
             </div>
           )}
@@ -320,7 +346,9 @@ export default function ProgressView({ user }) {
       {symptoms.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-6 mt-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2 text-yellow-500">🏆</span>
+            <svg className="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
             Most Common Symptoms
           </h3>
           <div className="space-y-3">
@@ -346,7 +374,11 @@ export default function ProgressView({ user }) {
       {/* Empty State */}
       {symptoms.length === 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
-          <div className="text-6xl mb-4 text-gray-400">📊</div>
+          <div className="flex justify-center mb-4">
+            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">No progress data yet</h3>
           <p className="text-gray-600 mb-4">Start tracking your symptoms to see your progress and patterns</p>
         </div>

@@ -52,7 +52,7 @@ export default function Home() {
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
                     <h3 className="text-lg font-semibold mb-3 text-gray-800">Data Management</h3>
                     <button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-200 font-medium shadow-md">
-                      📥 Download Symptom Data
+                      Download Symptom Data
                     </button>
                   </div>
                   
@@ -67,7 +67,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-md"
                     >
-                      🗑️ Clear All Data
+                      Clear All Data
                     </button>
                   </div>
                   
@@ -79,7 +79,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-gray-500 to-slate-500 text-white px-4 py-3 rounded-xl hover:from-gray-600 hover:to-slate-600 transition-all duration-200 font-medium shadow-md"
                     >
-                      🚪 Log Out
+                      Log Out
                     </button>
                   </div>
                 </div>
