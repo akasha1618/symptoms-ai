@@ -195,7 +195,7 @@ export default function ProgressView({ user }) {
               <p className="text-blue-100 text-sm font-medium">Total Symptoms</p>
               <p className="text-2xl font-bold">{filteredSymptoms.length}</p>
             </div>
-            <div className="text-3xl">📊</div>
+            <div className="text-3xl text-blue-200">📊</div>
           </div>
         </div>
         
@@ -205,7 +205,7 @@ export default function ProgressView({ user }) {
               <p className="text-green-100 text-sm font-medium">Avg Severity</p>
               <p className="text-2xl font-bold">{getAverageSeverity()}</p>
             </div>
-            <div className="text-3xl">📈</div>
+            <div className="text-3xl text-green-200">📈</div>
           </div>
         </div>
         
@@ -215,7 +215,7 @@ export default function ProgressView({ user }) {
               <p className="text-purple-100 text-sm font-medium">This Week</p>
               <p className="text-2xl font-bold">{getRecentSymptoms().length}</p>
             </div>
-            <div className="text-3xl">📅</div>
+            <div className="text-3xl text-purple-200">📅</div>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@ export default function ProgressView({ user }) {
         {/* Severity Trend Chart */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2">📈</span>
+            <span className="mr-2 text-blue-500">📈</span>
             Severity Trend
           </h3>
           {lineChartData && lineChartData.labels.length > 0 ? (
@@ -265,7 +265,7 @@ export default function ProgressView({ user }) {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-4xl mb-4">📊</div>
+              <div className="text-4xl mb-4 text-gray-400">📊</div>
               <p className="text-gray-500">No data for selected period</p>
             </div>
           )}
@@ -274,7 +274,7 @@ export default function ProgressView({ user }) {
         {/* Category Distribution Chart */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2">🥧</span>
+            <span className="mr-2 text-purple-500">🥧</span>
             Symptoms by Category
           </h3>
           {pieChartData && pieChartData.labels.length > 0 ? (
@@ -309,7 +309,7 @@ export default function ProgressView({ user }) {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-4xl mb-4">🥧</div>
+              <div className="text-4xl mb-4 text-gray-400">🥧</div>
               <p className="text-gray-500">No data for selected period</p>
             </div>
           )}
@@ -320,7 +320,7 @@ export default function ProgressView({ user }) {
       {symptoms.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-6 mt-6 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <span className="mr-2">🏆</span>
+            <span className="mr-2 text-yellow-500">🏆</span>
             Most Common Symptoms
           </h3>
           <div className="space-y-3">
@@ -346,7 +346,7 @@ export default function ProgressView({ user }) {
       {/* Empty State */}
       {symptoms.length === 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
-          <div className="text-6xl mb-4">📊</div>
+          <div className="text-6xl mb-4 text-gray-400">📊</div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">No progress data yet</h3>
           <p className="text-gray-600 mb-4">Start tracking your symptoms to see your progress and patterns</p>
         </div>

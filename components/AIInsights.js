@@ -65,36 +65,36 @@ export default function AIInsights({ user }) {
     const mostCommonCategory = Object.keys(categories).sort((a, b) => categories[b] - categories[a])[0];
     const mostCommonTrigger = Object.keys(triggers).sort((a, b) => triggers[b] - triggers[a])[0];
 
-    let insights = `🤖 AI Analysis Report\n\n`;
-    insights += `📊 Based on your ${symptoms.length} tracked symptoms:\n\n`;
+    let insights = `AI Analysis Report\n\n`;
+    insights += `Based on your ${symptoms.length} tracked symptoms:\n\n`;
     
     // Severity analysis
     if (avgSeverity <= 2) {
-      insights += "✅ **Overall Health Status: Good**\n";
+      insights += "✅ Overall Health Status: Good\n";
       insights += "Your symptoms are generally mild, which is a positive sign!\n\n";
     } else if (avgSeverity <= 3.5) {
-      insights += "⚠️ **Overall Health Status: Moderate**\n";
+      insights += "⚠️ Overall Health Status: Moderate\n";
       insights += "Your symptoms are moderate. Consider tracking more frequently.\n\n";
     } else {
-      insights += "🚨 **Overall Health Status: Concerning**\n";
+      insights += "🚨 Overall Health Status: Concerning\n";
       insights += "Your symptoms are severe. Please consult with a healthcare provider.\n\n";
     }
 
     // Recent activity
     if (recentSymptoms.length > 0) {
-      insights += `📈 **Recent Activity:** You've tracked ${recentSymptoms.length} symptoms in the last 7 days.\n\n`;
+      insights += `📈 Recent Activity: You've tracked ${recentSymptoms.length} symptoms in the last 7 days.\n\n`;
     }
 
     // Pattern analysis
     if (mostCommonCategory) {
-      insights += `🏷️ **Most Common Category:** ${mostCommonCategory} (${categories[mostCommonCategory]} occurrences)\n\n`;
+      insights += `🏷️ Most Common Category: ${mostCommonCategory} (${categories[mostCommonCategory]} occurrences)\n\n`;
     }
 
     if (mostCommonTrigger) {
-      insights += `🔍 **Potential Trigger:** ${mostCommonTrigger} (${triggers[mostCommonTrigger]} occurrences)\n\n`;
+      insights += `🔍 Potential Trigger: ${mostCommonTrigger} (${triggers[mostCommonTrigger]} occurrences)\n\n`;
     }
 
-    insights += "💡 **Recommendations:**\n";
+    insights += "💡 Recommendations:\n";
     insights += "• Continue tracking your symptoms regularly\n";
     insights += "• Note any patterns or triggers\n";
     insights += "• Consider lifestyle factors that might affect your symptoms\n";
@@ -133,7 +133,7 @@ export default function AIInsights({ user }) {
       <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
         <div className="flex items-center mb-4">
           <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
-            <span className="text-white text-xl">🤖</span>
+            <span className="text-white text-xl font-bold">AI</span>
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-800">AI-Powered Analysis</h3>
@@ -167,7 +167,7 @@ export default function AIInsights({ user }) {
         {symptoms.length === 0 && (
           <div className="mt-4 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
             <div className="flex items-center">
-              <span className="text-yellow-600 mr-2">⚠️</span>
+              <span className="text-yellow-600 mr-2 font-bold">!</span>
               <p className="text-yellow-800 text-sm">
                 Track some symptoms first to get personalized insights.
               </p>
@@ -181,7 +181,7 @@ export default function AIInsights({ user }) {
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-3">
-              <span className="text-white text-lg">📊</span>
+              <span className="text-white text-lg font-bold">📊</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-800">Your AI Insights</h3>
           </div>
@@ -199,13 +199,13 @@ export default function AIInsights({ user }) {
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <div className="flex items-center mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
-            <span className="text-white text-lg">🚀</span>
+            <span className="text-white text-lg font-bold">🚀</span>
           </div>
           <h3 className="text-lg font-semibold text-gray-800">Coming Soon</h3>
         </div>
         <div className="space-y-4">
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
-            <span className="text-purple-600 text-lg">🔮</span>
+            <span className="text-purple-600 text-lg font-bold">🔮</span>
             <div>
               <h4 className="font-medium text-gray-800">Predictive Analysis</h4>
               <p className="text-gray-600 text-sm">AI will predict potential symptom flare-ups based on patterns</p>
@@ -213,7 +213,7 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
-            <span className="text-blue-600 text-lg">💊</span>
+            <span className="text-blue-600 text-lg font-bold">💊</span>
             <div>
               <h4 className="font-medium text-gray-800">Medication Insights</h4>
               <p className="text-gray-600 text-sm">Track medication effectiveness and potential interactions</p>
@@ -221,7 +221,7 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
-            <span className="text-green-600 text-lg">🏥</span>
+            <span className="text-green-600 text-lg font-bold">🏥</span>
             <div>
               <h4 className="font-medium text-gray-800">Healthcare Integration</h4>
               <p className="text-gray-600 text-sm">Share insights directly with your healthcare providers</p>
@@ -229,7 +229,7 @@ export default function AIInsights({ user }) {
           </div>
           
           <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl">
-            <span className="text-orange-600 text-lg">📱</span>
+            <span className="text-orange-600 text-lg font-bold">📱</span>
             <div>
               <h4 className="font-medium text-gray-800">Smart Notifications</h4>
               <p className="text-gray-600 text-sm">Intelligent reminders and health alerts</p>
@@ -241,7 +241,7 @@ export default function AIInsights({ user }) {
       {/* Empty State */}
       {symptoms.length === 0 && !insights && (
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
-          <div className="text-6xl mb-4">🤖</div>
+          <div className="text-6xl mb-4 text-gray-400">🤖</div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">No data to analyze yet</h3>
           <p className="text-gray-600 mb-4">Start tracking your symptoms to unlock AI-powered insights and recommendations</p>
         </div>

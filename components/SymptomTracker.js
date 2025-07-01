@@ -152,10 +152,10 @@ export default function SymptomTracker({ user }) {
     return 'bg-red-100 text-red-800';
   };
 
-  const getSeverityEmoji = (severity) => {
-    if (severity <= 2) return '😊';
-    if (severity <= 4) return '😐';
-    return '😰';
+  const getSeverityLabel = (severity) => {
+    if (severity <= 2) return 'Mild';
+    if (severity <= 4) return 'Moderate';
+    return 'Severe';
   };
 
   const renderCustomFieldInput = (field, value, onChange) => {
@@ -165,7 +165,7 @@ export default function SymptomTracker({ user }) {
           <select
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
           >
             <option value="">Select...</option>
             <option value="Yes">Yes</option>
@@ -179,7 +179,7 @@ export default function SymptomTracker({ user }) {
             type="number"
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
           />
         );
       default:
@@ -188,7 +188,7 @@ export default function SymptomTracker({ user }) {
             type="text"
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
           />
         );
     }
@@ -221,7 +221,7 @@ export default function SymptomTracker({ user }) {
           onClick={() => setShowAddForm(!showAddForm)}
           className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-4 px-6 rounded-2xl font-semibold shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 flex items-center justify-center space-x-2"
         >
-          <span className="text-xl">➕</span>
+          <span className="text-xl">+</span>
           <span>Add New Symptom</span>
         </button>
       </div>
@@ -238,12 +238,12 @@ export default function SymptomTracker({ user }) {
                 placeholder="Symptom name"
                 value={newSymptom.name}
                 onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
               />
               <select
                 value={newSymptom.category}
                 onChange={(e) => setNewSymptom({ ...newSymptom, category: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
@@ -258,7 +258,7 @@ export default function SymptomTracker({ user }) {
                 placeholder="Add new category"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 onBlur={() => {
                   if (newCategory && !categories.includes(newCategory)) {
                     setCategories([...categories, newCategory]);
@@ -269,13 +269,13 @@ export default function SymptomTracker({ user }) {
               <select
                 value={newSymptom.severity}
                 onChange={(e) => setNewSymptom({ ...newSymptom, severity: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
               >
-                <option value={1}>😊 Mild (1)</option>
-                <option value={2}>😐 Moderate (2)</option>
-                <option value={3}>😐 Moderate (3)</option>
-                <option value={4}>😰 Severe (4)</option>
-                <option value={5}>😰 Very Severe (5)</option>
+                <option value={1}>Mild (1)</option>
+                <option value={2}>Moderate (2)</option>
+                <option value={3}>Moderate (3)</option>
+                <option value={4}>Severe (4)</option>
+                <option value={5}>Very Severe (5)</option>
               </select>
             </div>
 
@@ -284,7 +284,7 @@ export default function SymptomTracker({ user }) {
                 placeholder="Additional notes (optional)"
                 value={newSymptom.notes}
                 onChange={(e) => setNewSymptom({ ...newSymptom, notes: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 resize-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 resize-none"
                 rows="3"
               />
               <input
@@ -292,7 +292,7 @@ export default function SymptomTracker({ user }) {
                 placeholder="Food/Action trigger (optional)"
                 value={newSymptom.foodAction}
                 onChange={(e) => setNewSymptom({ ...newSymptom, foodAction: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
               />
             </div>
 
@@ -355,12 +355,12 @@ export default function SymptomTracker({ user }) {
                 placeholder="Field name (e.g., Medication)"
                 value={newField.name}
                 onChange={(e) => setNewField({ ...newField, name: e.target.value, display_name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900 placeholder-gray-500"
               />
               <select
                 value={newField.type}
                 onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900"
               >
                 <option value="text">Text</option>
                 <option value="number">Number</option>
@@ -398,7 +398,7 @@ export default function SymptomTracker({ user }) {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Symptoms</h3>
         {symptoms.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-gray-100">
-            <div className="text-6xl mb-4">📊</div>
+            <div className="text-6xl mb-4 text-gray-400">📊</div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">No symptoms tracked yet</h3>
             <p className="text-gray-600 mb-4">Start tracking your symptoms to see patterns and get AI insights</p>
             <button
@@ -416,12 +416,12 @@ export default function SymptomTracker({ user }) {
                   <div className="flex items-center space-x-3 mb-2">
                     <h4 className="text-lg font-semibold text-gray-800">{symptom.name}</h4>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSeverityColor(symptom.severity)}`}>
-                      {getSeverityEmoji(symptom.severity)} Level {symptom.severity}
+                      {getSeverityLabel(symptom.severity)} (Level {symptom.severity})
                     </span>
                   </div>
                   <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <span>📅 {new Date(symptom.date).toLocaleDateString()}</span>
-                    {symptom.category && <span>🏷️ {symptom.category}</span>}
+                    <span>Date: {new Date(symptom.date).toLocaleDateString()}</span>
+                    {symptom.category && <span>Category: {symptom.category}</span>}
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -429,13 +429,13 @@ export default function SymptomTracker({ user }) {
                     onClick={() => setEditingId(editingId === symptom.id ? null : symptom.id)}
                     className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50 transition-colors"
                   >
-                    ✏️
+                    Edit
                   </button>
                   <button
                     onClick={() => deleteSymptom(symptom.id)}
                     className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors"
                   >
-                    🗑️
+                    Delete
                   </button>
                 </div>
               </div>
