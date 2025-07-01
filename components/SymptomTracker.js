@@ -346,6 +346,35 @@ export default function SymptomTracker({ user }) {
             {showAddField ? 'Cancel' : 'Add Field'}
           </button>
         </div>
+
+        {/* Explanation Section */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-4 border border-blue-100">
+          <div className="flex items-start space-x-3">
+            <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h4 className="font-medium text-blue-900 mb-2">What are Custom Fields?</h4>
+              <p className="text-blue-800 text-sm leading-relaxed mb-3">
+                Custom fields allow you to track additional information specific to your symptoms. You can create fields for medication, sleep quality, stress levels, weather conditions, or any other factors that might affect your symptoms.
+              </p>
+              <div className="space-y-2 text-sm text-blue-700">
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">Examples:</span>
+                  <span>Medication taken, Sleep hours, Stress level, Weather, Exercise, Food eaten</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">Field types:</span>
+                  <span>Text (free input), Number (numeric values), Yes/No/Maybe (quick selection)</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">How to use:</span>
+                  <span>Create fields once, then they'll appear in every symptom entry form</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         
         {showAddField && (
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 mb-4">
