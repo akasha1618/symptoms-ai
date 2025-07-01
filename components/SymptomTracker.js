@@ -24,6 +24,7 @@ export default function SymptomTracker({ user }) {
   const [newField, setNewField] = useState({ name: '', type: 'text', display_name: '' });
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showCustomFieldsInfo, setShowCustomFieldsInfo] = useState(false);
 
   // Fetch symptoms and custom fields for the logged-in user
   useEffect(() => {
@@ -353,25 +354,54 @@ export default function SymptomTracker({ user }) {
             <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <div>
+            <div className="flex-1">
               <h4 className="font-medium text-blue-900 mb-2">What are Custom Fields?</h4>
-              <p className="text-blue-800 text-sm leading-relaxed mb-3">
-                Custom fields allow you to track additional information specific to your symptoms. You can create fields for medication, sleep quality, stress levels, weather conditions, or any other factors that might affect your symptoms.
-              </p>
-              <div className="space-y-2 text-sm text-blue-700">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">Examples:</span>
-                  <span>Medication taken, Sleep hours, Stress level, Weather, Exercise, Food eaten</span>
+              
+              {!showCustomFieldsInfo ? (
+                <div>
+                  <p className="text-blue-800 text-sm leading-relaxed mb-3">
+                    Track additional information specific to your symptoms like medication, sleep quality, stress levels, and more.
+                  </p>
+                  <button
+                    onClick={() => setShowCustomFieldsInfo(true)}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1 transition-colors"
+                  >
+                    <span>Click to read more</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">Field types:</span>
-                  <span>Text (free input), Number (numeric values), Yes/No/Maybe (quick selection)</span>
+              ) : (
+                <div>
+                  <p className="text-blue-800 text-sm leading-relaxed mb-3">
+                    Custom fields allow you to track additional information specific to your symptoms. You can create fields for medication, sleep quality, stress levels, weather conditions, or any other factors that might affect your symptoms.
+                  </p>
+                  <div className="space-y-2 text-sm text-blue-700 mb-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">Examples:</span>
+                      <span>Medication taken, Sleep hours, Stress level, Weather, Exercise, Food eaten</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">Field types:</span>
+                      <span>Text (free input), Number (numeric values), Yes/No/Maybe (quick selection)</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">How to use:</span>
+                      <span>Create fields once, then they'll appear in every symptom entry form</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowCustomFieldsInfo(false)}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1 transition-colors"
+                  >
+                    <span>Show less</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                    </svg>
+                  </button>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">How to use:</span>
-                  <span>Create fields once, then they'll appear in every symptom entry form</span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
