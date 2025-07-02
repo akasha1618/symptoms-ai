@@ -12,6 +12,7 @@ export default function SymptomTracker({ user }) {
     notes: '',
     foodAction: '',
     date: new Date().toISOString().split('T')[0],
+    time: new Date().toTimeString().slice(0, 5),
     custom_fields: {}
   });
   const [categories, setCategories] = useState([
@@ -79,6 +80,7 @@ export default function SymptomTracker({ user }) {
         notes: '',
         foodAction: '',
         date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().slice(0, 5),
         custom_fields: {}
       });
       setShowAddForm(false);
@@ -176,6 +178,7 @@ export default function SymptomTracker({ user }) {
       notes: symptom.notes || '',
       foodAction: symptom.foodAction || '',
       date: symptom.date,
+      time: symptom.time,
       custom_fields: symptom.custom_fields || {}
     });
   };
@@ -190,6 +193,7 @@ export default function SymptomTracker({ user }) {
       notes: editingSymptom.notes,
       foodAction: editingSymptom.foodAction,
       date: editingSymptom.date,
+      time: editingSymptom.time,
       custom_fields: customFields.reduce((acc, field) => {
         acc[field.name] = editingSymptom[field.name] || '';
         return acc;
@@ -342,9 +346,12 @@ export default function SymptomTracker({ user }) {
                 onChange={(e) => setNewSymptom({ ...newSymptom, date: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
               />
-              <div className="flex items-center justify-center">
-                <span className="text-sm text-gray-500">Select the date when the symptom occurred</span>
-              </div>
+              <input
+                type="time"
+                value={newSymptom.time}
+                onChange={(e) => setNewSymptom({ ...newSymptom, time: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -551,6 +558,7 @@ export default function SymptomTracker({ user }) {
                   </div>
                   <div className="flex items-center space-x-4 text-sm text-gray-600">
                     <span>Date: {new Date(symptom.date).toLocaleDateString()}</span>
+                    {symptom.time && <span>Time: {symptom.time}</span>}
                     {symptom.category && <span>Category: {symptom.category}</span>}
                   </div>
                 </div>
@@ -662,6 +670,18 @@ export default function SymptomTracker({ user }) {
                   onChange={(e) => setEditingSymptom({ ...editingSymptom, date: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="time"
+                  value={editingSymptom.time}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, time: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                />
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-gray-500">Select date and time when symptom occurred</span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
