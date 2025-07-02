@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization of OpenAI client to avoid build-time errors
+let openai = null;
+
+async function getOpenAIClient() {
+  if (!openai) {
+    const { default: OpenAI } = await import('openai');
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openai;
+}
 
 export async function POST(request) {
   try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: 'AI service is not configured. Please check your environment variables.' },
+        { status: 500 }
+      );
+    }
+
     const { symptoms } = await request.json();
 
     if (!symptoms || symptoms.length === 0) {
@@ -16,6 +31,9 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+
+    // Get OpenAI client
+    const openaiClient = await getOpenAIClient();
 
     // Format symptoms data for the prompt
     const symptomsText = symptoms.map(symptom => {
@@ -72,7 +90,7 @@ IMPORTANT GUIDELINES:
 Format your response as a well-structured analysis with clear sections and bullet points where appropriate.`;
 
     // Call OpenAI API
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
