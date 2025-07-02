@@ -6,7 +6,7 @@ const nextConfig = {
     // Enable any experimental features if needed
   },
   // Ensure proper output for Netlify
-  output: 'standalone',
+  output: 'export',
 };
 
 export default nextConfig;

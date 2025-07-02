@@ -8,6 +8,7 @@ export default function AIInsights({ user }) {
   const [insights, setInsights] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -31,81 +32,31 @@ export default function AIInsights({ user }) {
     }
 
     setLoading(true);
+    setError('');
     
-    // For now, we'll generate mock insights
-    // Later, this will connect to an actual LLM API
-    setTimeout(() => {
-      const mockInsights = generateMockInsights(symptoms);
-      setInsights(mockInsights);
+    try {
+      const response = await fetch('/api/ai-insights', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ symptoms }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate insights');
+      }
+
+      setInsights(data.insights);
+    } catch (err) {
+      console.error('Error generating insights:', err);
+      setError(err.message || 'Failed to generate AI insights. Please try again.');
+      setInsights('');
+    } finally {
       setLoading(false);
-    }, 2000);
-  };
-
-  const generateMockInsights = (symptoms) => {
-    const avgSeverity = symptoms.reduce((sum, s) => sum + s.severity, 0) / symptoms.length;
-    const recentSymptoms = symptoms.filter(s => {
-      const symptomDate = new Date(s.date);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return symptomDate >= weekAgo;
-    });
-
-    // Analyze patterns
-    const categories = {};
-    const triggers = {};
-    symptoms.forEach(s => {
-      if (s.category) {
-        categories[s.category] = (categories[s.category] || 0) + 1;
-      }
-      if (s.foodAction) {
-        triggers[s.foodAction] = (triggers[s.foodAction] || 0) + 1;
-      }
-    });
-
-    const mostCommonCategory = Object.keys(categories).sort((a, b) => categories[b] - categories[a])[0];
-    const mostCommonTrigger = Object.keys(triggers).sort((a, b) => triggers[b] - triggers[a])[0];
-
-    let insights = `AI Analysis Report\n\n`;
-    insights += `Based on your ${symptoms.length} tracked symptoms:\n\n`;
-    
-    // Severity analysis
-    if (avgSeverity <= 2) {
-      insights += "Overall Health Status: Good\n";
-      insights += "Your symptoms are generally mild, which is a positive sign!\n\n";
-    } else if (avgSeverity <= 3.5) {
-      insights += "Overall Health Status: Moderate\n";
-      insights += "Your symptoms are moderate. Consider tracking more frequently.\n\n";
-    } else {
-      insights += "Overall Health Status: Concerning\n";
-      insights += "Your symptoms are severe. Please consult with a healthcare provider.\n\n";
     }
-
-    // Recent activity
-    if (recentSymptoms.length > 0) {
-      insights += `Recent Activity: You've tracked ${recentSymptoms.length} symptoms in the last 7 days.\n\n`;
-    }
-
-    // Pattern analysis
-    if (mostCommonCategory) {
-      insights += `Most Common Category: ${mostCommonCategory} (${categories[mostCommonCategory]} occurrences)\n\n`;
-    }
-
-    if (mostCommonTrigger) {
-      insights += `Potential Trigger: ${mostCommonTrigger} (${triggers[mostCommonTrigger]} occurrences)\n\n`;
-    }
-
-    insights += "Recommendations:\n";
-    insights += "• Continue tracking your symptoms regularly\n";
-    insights += "• Note any patterns or triggers\n";
-    insights += "• Consider lifestyle factors that might affect your symptoms\n";
-    insights += "• Share your data with healthcare providers\n";
-    insights += "• Monitor your most common symptom category\n";
-
-    if (mostCommonTrigger) {
-      insights += `• Pay attention to how ${mostCommonTrigger} affects your symptoms\n`;
-    }
-
-    return insights;
   };
 
   if (loadingData) {
@@ -172,6 +123,26 @@ export default function AIInsights({ user }) {
                 Track some symptoms first to get personalized insights.
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Error Display */}
+        {error && (
+          <div className="mt-4 p-4 bg-red-50 rounded-xl border border-red-200">
+            <div className="flex items-center">
+              <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-red-800 text-sm font-medium">
+                {error}
+              </p>
+            </div>
+            <button
+              onClick={() => setError('')}
+              className="mt-2 text-red-600 text-xs hover:text-red-800 underline"
+            >
+              Dismiss
+            </button>
           </div>
         )}
       </div>
