@@ -25,6 +25,7 @@ export default function SymptomTracker({ user }) {
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showCustomFieldsInfo, setShowCustomFieldsInfo] = useState(false);
+  const [editingSymptom, setEditingSymptom] = useState(null);
 
   // Fetch symptoms and custom fields for the logged-in user
   useEffect(() => {
@@ -99,6 +100,13 @@ export default function SymptomTracker({ user }) {
 
   // Delete a symptom
   const deleteSymptom = async (id) => {
+    const symptomToDelete = symptoms.find(s => s.id === id);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${symptomToDelete?.name}"? This action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
+    
     const { error } = await supabase
       .from('symptoms')
       .delete()
@@ -157,6 +165,53 @@ export default function SymptomTracker({ user }) {
     if (severity <= 2) return 'Mild';
     if (severity <= 4) return 'Moderate';
     return 'Severe';
+  };
+
+  const startEditing = (symptom) => {
+    setEditingSymptom({
+      id: symptom.id,
+      name: symptom.name,
+      category: symptom.category,
+      severity: symptom.severity,
+      notes: symptom.notes || '',
+      foodAction: symptom.foodAction || '',
+      date: symptom.date,
+      custom_fields: symptom.custom_fields || {}
+    });
+  };
+
+  const saveEdit = async () => {
+    if (!editingSymptom || !editingSymptom.name.trim()) return;
+    
+    const updatedSymptom = {
+      name: editingSymptom.name,
+      category: editingSymptom.category,
+      severity: editingSymptom.severity,
+      notes: editingSymptom.notes,
+      foodAction: editingSymptom.foodAction,
+      date: editingSymptom.date,
+      custom_fields: customFields.reduce((acc, field) => {
+        acc[field.name] = editingSymptom[field.name] || '';
+        return acc;
+      }, {})
+    };
+
+    const { error } = await supabase
+      .from('symptoms')
+      .update(updatedSymptom)
+      .eq('id', editingSymptom.id)
+      .eq('user_id', user.id);
+    
+    if (!error) {
+      setSymptoms(symptoms.map(s => 
+        s.id === editingSymptom.id ? { ...s, ...updatedSymptom } : s
+      ));
+      setEditingSymptom(null);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingSymptom(null);
   };
 
   const renderCustomFieldInput = (field, value, onChange) => {
@@ -278,6 +333,18 @@ export default function SymptomTracker({ user }) {
                 <option value={4}>Severe (4)</option>
                 <option value={5}>Very Severe (5)</option>
               </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="date"
+                value={newSymptom.date}
+                onChange={(e) => setNewSymptom({ ...newSymptom, date: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              />
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-gray-500">Select the date when the symptom occurred</span>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -489,7 +556,7 @@ export default function SymptomTracker({ user }) {
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => setEditingId(editingId === symptom.id ? null : symptom.id)}
+                    onClick={() => startEditing(symptom)}
                     className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50 transition-colors"
                   >
                     Edit
@@ -539,6 +606,120 @@ export default function SymptomTracker({ user }) {
           ))
         )}
       </div>
+
+      {/* Edit Symptom Form */}
+      {editingSymptom && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Edit Symptom</h3>
+              <button
+                onClick={cancelEdit}
+                className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Symptom name"
+                  value={editingSymptom.name}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, name: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                />
+                <select
+                  value={editingSymptom.category}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, category: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <select
+                  value={editingSymptom.severity}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, severity: parseInt(e.target.value) })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                >
+                  <option value={1}>Mild (1)</option>
+                  <option value={2}>Moderate (2)</option>
+                  <option value={3}>Moderate (3)</option>
+                  <option value={4}>Severe (4)</option>
+                  <option value={5}>Very Severe (5)</option>
+                </select>
+                <input
+                  type="date"
+                  value={editingSymptom.date}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, date: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <textarea
+                  placeholder="Additional notes (optional)"
+                  value={editingSymptom.notes}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, notes: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 resize-none"
+                  rows="3"
+                />
+                <input
+                  type="text"
+                  placeholder="Food/Action trigger (optional)"
+                  value={editingSymptom.foodAction}
+                  onChange={(e) => setEditingSymptom({ ...editingSymptom, foodAction: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                />
+              </div>
+
+              {/* Custom Fields Inputs for Edit */}
+              {customFields.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-gray-700">Custom Fields:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {customFields.map((field) => (
+                      <div key={field.id}>
+                        <label className="block text-xs font-medium text-gray-600 mb-2">
+                          {field.display_name}
+                        </label>
+                        {renderCustomFieldInput(
+                          field,
+                          editingSymptom[field.name],
+                          (value) => setEditingSymptom({ ...editingSymptom, [field.name]: value })
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex space-x-3 pt-4">
+                <button
+                  onClick={saveEdit}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={cancelEdit}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
