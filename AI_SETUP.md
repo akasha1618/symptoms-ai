@@ -1,5 +1,5 @@
 # AI Integration Setup Guide
-
+ 
 ## OpenAI API Configuration
 
 To enable AI-powered symptom analysis, you need to configure your OpenAI API key:
